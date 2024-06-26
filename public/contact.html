@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+  <style>
+    /* Basic styling for the form */
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 1em;
+      border: 1px solid #ccc;
+      border-radius: 1em;
+    }
+    label {
+      margin-top: 1em;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.5em;
+    }
+    input[type="submit"] {
+      margin-top: 1em;
+      background: #007BFF;
+      color: white;
+      border: none;
+      padding: 0.75em;
+      border-radius: 0.5em;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <form id="contactForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" required></textarea><br><br>
+    <input type="submit" value="Send">
+  </form>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Get form values
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      // Perform form validation
+      if (name === '' || email === '' || message === '') {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      // Prepare the data to be sent
+      const formData = {
+        name: name,
+        email: email,
+        message: message
+      };
+
+      // Send the data using Fetch API
+      fetch('/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert('Message sent successfully!');
+        // Reset the form
+        document.getElementById('contactForm').reset();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('There was an error sending your message.');
+      });
+    });
+  </script>
+</body>
+</html>
